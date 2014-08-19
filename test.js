@@ -113,6 +113,22 @@ tape('find containers', function(t){
 })
 
 
+
+tape('collection has server to containers map', function(t){
+  cluster.ps(function(err, list, collection){
+    t.ok(collection.servers, 'has a servers property in the collection')
+
+    t.ok(collection.servers.node1, 'node 1 is there')
+    t.ok(collection.servers.node2, 'node 2 is there')
+    t.ok(collection.servers.node3, 'node 3 is there')
+
+    t.ok(collection.servers.node1['test.1'], 'test 1 is on node1')
+    t.ok(collection.servers.node2['test.2'], 'test 2 is on node2')
+    t.ok(collection.servers.node3['test.3'], 'test 3 is on node3')
+  })
+})
+
+
 tape('stop containers', function(t){
   killContainers(t, function(){
     t.end()

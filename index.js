@@ -79,10 +79,13 @@ function ps(backends, done){
 		if(err) return done(err)
 		var ret = []
 		var collection = blankCollection()
+		var servers = {}
 		multiarr.forEach(function(arr, i){
+			servers[backends[i].hostname] = arr
 			mergeCollection(collection, createCollection(backends[i], arr))
 			ret = ret.concat(arr)
 		})
+		collection.servers = servers
 		done(null, ret, collection)
 	})
 }

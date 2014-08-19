@@ -56,7 +56,7 @@ Each server object has 2 important keys:
  * hostname - the hostname
  * docker - the IP:PORT of the docker server running on the host
 
-#### `cluster.ps(callback)`
+#### `cluster.ps(function(err, list, collection){})`
 
 Get an array of all containers running across the cluster
 
@@ -69,6 +69,20 @@ test@host3
 ```
 
 If the container has no name - the id will be used instead.
+
+`collection` is an object that has the following keys:
+
+ * names
+ * shortids
+ * ids
+
+The keys of these objects are the names and ids of containers and the values are the hostnames of the server they are running on
+
+There is another key of the collection:
+
+ * servers
+
+this maps the server hostname onto an array of containers running on that server
 
 #### `cluster.find(id, function(err, server){})`
 

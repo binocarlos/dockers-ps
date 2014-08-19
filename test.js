@@ -35,8 +35,6 @@ function runContainers(t, done){
 
     var command = getTestCommand(job, server.docker)
     cp.exec(command, function(err, stdout, stderr){
-      if(stderr) err = stderr.toString()
-      if(err) return nextJob(err)
       nextJob()
     })
     
@@ -77,7 +75,7 @@ tape('ps should list all containers', function(t){
       nameshit[job.Names[0]] = true
       servernameshit[job.Names[1]] = true
     })
-    
+
     t.ok(nameshit['/test.1'], 'test 1')
     t.ok(nameshit['/test.2'], 'test 2')
     t.ok(nameshit['/test.3'], 'test 3')
@@ -98,6 +96,14 @@ tape('find containers', function(t){
   }
   async.forEachSeries(jobs, function(job, nextJob){
     cluster.find(job, function(err, server){
+      if(!server){
+        err = 'no server'
+      }
+      if(err){
+        t.fail(err, 'server find')
+        t.end()
+        return
+      }
       t.equal(server.hostname, correct[job], job + ' = ' + server.hostname)
       nextJob()
     })
@@ -112,19 +118,32 @@ tape('find containers', function(t){
   
 })
 
-
+function findName(jobs, name){
+  var hit = false
+  jobs.forEach(function(job){
+    job.Names.forEach(function(name){
+      if(name==name){
+        hit = true
+      }
+    })
+  })
+  return hit
+}
 
 tape('collection has server to containers map', function(t){
   cluster.ps(function(err, list, collection){
+    
     t.ok(collection.servers, 'has a servers property in the collection')
 
     t.ok(collection.servers.node1, 'node 1 is there')
     t.ok(collection.servers.node2, 'node 2 is there')
     t.ok(collection.servers.node3, 'node 3 is there')
 
-    t.ok(collection.servers.node1['test.1'], 'test 1 is on node1')
-    t.ok(collection.servers.node2['test.2'], 'test 2 is on node2')
-    t.ok(collection.servers.node3['test.3'], 'test 3 is on node3')
+    t.ok(findName(collection.servers.node1, '/test.1'), 'test 1 is on node1')
+    t.ok(findName(collection.servers.node2, '/test.2'), 'test 2 is on node2')
+    t.ok(findName(collection.servers.node3, '/test.3'), 'test 3 is on node3')
+    
+    t.end()
   })
 })
 

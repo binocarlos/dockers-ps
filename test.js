@@ -139,9 +139,17 @@ tape('collection has server to containers map', function(t){
     t.ok(collection.servers.node2, 'node 2 is there')
     t.ok(collection.servers.node3, 'node 3 is there')
 
-    t.ok(findName(collection.servers.node1, '/test.1'), 'test 1 is on node1')
-    t.ok(findName(collection.servers.node2, '/test.2'), 'test 2 is on node2')
-    t.ok(findName(collection.servers.node3, '/test.3'), 'test 3 is on node3')
+    t.ok(findName(collection.servers.node1.jobs, '/test.1'), 'test 1 is on node1')
+    t.ok(findName(collection.servers.node2.jobs, '/test.2'), 'test 2 is on node2')
+    t.ok(findName(collection.servers.node3.jobs, '/test.3'), 'test 3 is on node3')
+
+    t.equal(collection.servers.node1.hostname, 'node1', 'node1 hostname')
+    t.equal(collection.servers.node2.hostname, 'node2', 'node2 hostname')
+    t.equal(collection.servers.node3.hostname, 'node3', 'node3 hostname')
+
+    t.equal(collection.servers.node1.docker, '192.168.8.120:2375', 'node1 docker')
+    t.equal(collection.servers.node2.docker, '192.168.8.121:2375', 'node2 docker')
+    t.equal(collection.servers.node3.docker, '192.168.8.122:2375', 'node3 docker')
     
     t.end()
   })

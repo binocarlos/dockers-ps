@@ -81,7 +81,11 @@ function ps(backends, done){
 		var collection = blankCollection()
 		var servers = {}
 		multiarr.forEach(function(arr, i){
-			servers[backends[i].hostname] = arr
+			servers[backends[i].hostname] = {
+				hostname:backends[i].hostname,
+				docker:backends[i].docker,
+				jobs:arr
+			}
 			mergeCollection(collection, createCollection(backends[i], arr))
 			ret = ret.concat(arr)
 		})

@@ -20,5 +20,13 @@
   "bugs": {
     "url": "https://github.com/binocarlos/dockers-ps/issues"
   },
-  "homepage": "https://github.com/binocarlos/dockers-ps"
+  "homepage": "https://github.com/binocarlos/dockers-ps",
+  "devDependencies": {
+    "tape": "^2.14.0"
+  },
+  "dependencies": {
+    "async": "^0.9.0",
+    "concat-stream": "^1.4.6",
+    "hyperquest": "^0.3.0"
+  }
 }

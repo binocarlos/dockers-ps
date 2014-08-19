@@ -1,5 +1,5 @@
 var cp = require('child_process')
-var dockers = require('./')
+var dockerps = require('./')
 var tape     = require('tape')
 var async = require('async')
 
@@ -14,7 +14,12 @@ var allServers = [{
   docker:'192.168.8.122:2375'
 }]
 
-var jobs = ['dowdingtest.1', 'dowdingtest.2', 'dowdingtest.3']
+
+var cluster = dockerps(function(done){
+  done(null, allServers)
+})
+
+var jobs = ['test.1', 'test.2', 'test.3']
 
 function getTestCommand(name, server){
   return 'docker -H tcp://' + server + ' run --name ' + name + ' -d binocarlos/bring-a-ping --timeout 1000'
@@ -32,6 +37,7 @@ function runContainers(t, done){
     cp.exec(command, function(err, stdout, stderr){
       if(stderr) err = stderr.toString()
       if(err) return nextJob(err)
+      nextJob()
     })
     
   }, function(err){
@@ -40,7 +46,7 @@ function runContainers(t, done){
   })
 }
 
-function killContainers(done){
+function killContainers(t, done){
   var counter = 0
   async.forEachSeries(jobs, function(job, nextJob){
     var server = allServers[counter]
@@ -62,7 +68,7 @@ tape('start containers', function(t){
 })
 
 tape('ps should list all containers', function(t){
-  dockers.ps(allServers, function(err, list){
+  cluster.ps(function(err, list){
     console.log('-------------------------------------------');
     console.dir(list)
     t.end()

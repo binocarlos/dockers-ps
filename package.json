@@ -1,0 +1,24 @@
+{
+  "name": "dockers-ps",
+  "version": "0.0.1",
+  "description": "Get a list of containers running on multiple docker hosts",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/binocarlos/dockers-ps.git"
+  },
+  "keywords": [
+    "docker",
+    "ps",
+    "cluster"
+  ],
+  "author": "Kai Davenport",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/binocarlos/dockers-ps/issues"
+  },
+  "homepage": "https://github.com/binocarlos/dockers-ps"
+}

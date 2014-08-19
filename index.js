@@ -98,12 +98,12 @@ function getServerByHostname(servers, hostname){
 }
 
 function getContainerServer(backends, id, done){
-	ps(servers, function(err, result, collection){
+	ps(backends, function(err, result, collection){
 		if(err){
 			return done(err)
 		}
 		var hostname = searchCollection(collection, id)
-		var backend = getServerByHostname(servers, hostname)
+		var backend = getServerByHostname(backends, hostname)
 		if(!backend){
 			return done()
 		}

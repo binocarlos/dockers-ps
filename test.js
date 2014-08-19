@@ -69,11 +69,49 @@ tape('start containers', function(t){
 
 tape('ps should list all containers', function(t){
   cluster.ps(function(err, list){
-    console.log('-------------------------------------------');
-    console.dir(list)
+
+    var nameshit = {}
+    var servernameshit = {}
+
+    list.forEach(function(job){
+      nameshit[job.Names[0]] = true
+      servernameshit[job.Names[1]] = true
+    })
+    
+    t.ok(nameshit['/test.1'], 'test 1')
+    t.ok(nameshit['/test.2'], 'test 2')
+    t.ok(nameshit['/test.3'], 'test 3')
+    t.ok(servernameshit['/test.1@node1'], 'test1@node1')
+    t.ok(servernameshit['/test.2@node2'], 'test2@node2')
+    t.ok(servernameshit['/test.3@node3'], 'test3@node3')
     t.end()
   })
 })
+
+
+tape('find containers', function(t){
+
+  var correct = {
+    'test.1':'node1',
+    'test.2':'node2',
+    'test.3':'node3'
+  }
+  async.forEachSeries(jobs, function(job, nextJob){
+    cluster.find(job, function(err, server){
+      t.equal(server.hostname, correct[job], job + ' = ' + server.hostname)
+      nextJob()
+    })
+  }, function(err){
+    if(err){
+      t.fail(err, 'find containers')
+      t.end()
+      return
+    }
+    t.end()
+  })
+  
+})
+
 
 tape('stop containers', function(t){
   killContainers(t, function(){
